@@ -1,6 +1,3 @@
-# Links zu R (Satoshi) https://moodlearchive.epfl.ch/2019-2020/course/view.php?id=13241
-# print all tbl_df %>% print(n = Inf)
-
 # load libraries which are used
 library(readr)
 library(tidyverse)
