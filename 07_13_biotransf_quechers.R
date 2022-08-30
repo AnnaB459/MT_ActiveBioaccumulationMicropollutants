@@ -28,7 +28,7 @@ output <- list()
 all_bioacc <- list()
 
 # run through all substances
-for (i in seq_along(filepaths_quechers)) { #c(1:5))
+for (i in seq_along(filepaths_quechers)) {
   
   # Importing data and making some basic manipulation --------------------------
   # read data from csv-file and store it in dataframe called ISTDx_data
