@@ -1,3 +1,5 @@
+# This file calculates the recoveries for substances evaluated with the standard addition method
+
 # load libraries which are used
 library(readr)
 library(tidyverse)
@@ -98,6 +100,17 @@ for (i in seq_along(filepaths_stda)) {
              c("measured points","linear regression","left stdv","right stdv"),
              col=c("black","black","red","orange"), pch = c(1,15,15,15))
       
+      this_data <- as.data.frame(t(rbind(stda_conc_AS, AS_area[c(1:4,6),j])))
+      colnames(this_data) <- c('concentration','area')
+      print(ggplot(this_data, aes(x=concentration, y=area)) +
+              geom_point(color='#2980B9', size=4) +
+              xlim(-10,22) +
+              geom_smooth(method=lm, color='#2C3E50', fullrange = TRUE) +
+              labs(title = (paste(sub("_.*", "", current_compound), 'in activated sludge. Scheme',j)),x = "added standard solution [nmol]") +
+              geom_text(x=15,y=1,label=paste0('R^2 = ', r2_AS[j]) ) +
+              theme_bw(18)
+      )
+      
       # do a regression for biofilm
       BF_regr <- lm(unlist(BF_area[,j])~stda_conc)
       BF_i_coeffs <- coefficients(BF_regr)
@@ -155,6 +168,17 @@ for (i in seq_along(filepaths_stda)) {
       legend("topleft",
              c("measured points","linear regression","left stdv","right stdv"),
              col=c("black","black","red","orange"), pch = c(1,15,15,15)
+      )
+      
+      this_data <- as.data.frame(t(rbind(stda_conc, AS_area[,j])))
+      colnames(this_data) <- c('concentration','area')
+      print(ggplot(this_data, aes(x=concentration, y=area)) +
+              geom_point(color='#2980B9', size=4) +
+              xlim(-10,22) +
+              geom_smooth(method=lm, color='#2C3E50', fullrange = TRUE) +
+              labs(title = (paste(sub("_.*", "", current_compound), 'in activated sludge. Scheme',j)),x = "added standard solution [nmol]") +
+              geom_text(x=15,y=1,label=paste0('R^2 = ', r2_AS[j]) ) +
+              theme_bw(18)
       )
       
       # plot biofilm
