@@ -23,7 +23,6 @@ filepaths_aq <- fs::dir_ls("Rdata\\biotransformation_aq")
 V_init <- 0.5 # L, initial volume in batch
 tt_weights <- c(0.689,0.5185,0.488,0.448)
 mean_tt_weights <- c(0.60375,0.468)
-# tt_weights <- c(0.1,0.1,0.1,0.1) # this is just hypothetic data trying to find the error
 # import quechers data
 quechers_data <- read_csv(file = "Rdata\\bt_exp_output.csv")
 
@@ -110,7 +109,10 @@ for (i in seq_along(filepaths_aq)) { #c(1:5))
   nmol_total_as_bt <- nmolbt_qq_as + nmolbt_aq_as
   
   # sorption control plotting
-  data <- data.frame(time=c('t0','t48','t96','t0','t48','t96','t0','t48','t96','t0','t48','t96'),biocommunity=c('BF','BF','BF','AS','AS','AS','BF','BF','BF','AS','AS','AS'),phase=c('aqueous','aqueous','aqueous','aqueous','aqueous','aqueous','adsorbed','adsorbed','adsorbed','adsorbed','adsorbed','adsorbed'),amount=c(unlist(nmolsc_aq_bf),unlist(nmolsc_aq_as),unlist(as.matrix(nmolsc_qq_bf)),unlist(as.matrix(nmolsc_qq_as))))
+  data <- data.frame(time=c('t0','t48','t96','t0','t48','t96','t0','t48','t96','t0','t48','t96'),biocommunity=c('BF','BF','BF','AS','AS','AS','BF','BF','BF','AS','AS','AS'),phase=c('aqueous','aqueous','aqueous','aqueous','aqueous','aqueous','accumulated','accumulated','accumulated','accumulated','accumulated','accumulated'),amount=c(unlist(nmolsc_aq_bf),unlist(nmolsc_aq_as),unlist(as.matrix(nmolsc_qq_bf)),unlist(as.matrix(nmolsc_qq_as))))
+  
+  mypath <- file.path("Rdata","PlotOutputs","Mass_balance",paste("mass_balance", sub("_.*", "", current_compound), "_SC", ".jpeg", sep=''))
+  jpeg(file=mypath)
   
   print(ggplot(data,                         # Draw barplot with grouping & stacking col=c('aliceblue','green3')
          aes(x = biocommunity,
@@ -124,14 +126,16 @@ for (i in seq_along(filepaths_aq)) { #c(1:5))
     theme_bw(18) +
     theme(legend.position = 'right') +
     theme(legend.key.size = unit(1.5, 'cm')) +
-    labs(title = (paste(sub("_.*", "", current_compound), 'mass balance sorption control')),y = "amount [nmol]"))
-  
+    labs(title = (paste(sub("_.*", "", current_compound), 'mass balance \nsorption control')),y = "amount [nmol]", x = 'microbial community'))
+  dev.off()
   print(paste(current_compound, 'biofilm',nmolsc_aq_bf,t(nmolsc_qq_bf),'activated sludge',nmolsc_aq_as,t(nmolsc_qq_as)))
   
   
   # for biotic experiment
-  data <- data.frame(time=c('t0','t48','t96','t0','t48','t96','t0','t48','t96','t0','t48','t96'),biocommunity=c('BF','BF','BF','AS','AS','AS','BF','BF','BF','AS','AS','AS'),phase=c('aqueous','aqueous','aqueous','aqueous','aqueous','aqueous','adsorbed','adsorbed','adsorbed','adsorbed','adsorbed','adsorbed'),amount=c(unlist(nmolbt_aq_bf),unlist(nmolbt_aq_as),unlist(as.matrix(nmolbt_qq_bf)),unlist(as.matrix(nmolbt_qq_as))))
+  data <- data.frame(time=c('t0','t48','t96','t0','t48','t96','t0','t48','t96','t0','t48','t96'),biocommunity=c('BF','BF','BF','AS','AS','AS','BF','BF','BF','AS','AS','AS'),phase=c('aqueous','aqueous','aqueous','aqueous','aqueous','aqueous','accumulated','accumulated','accumulated','accumulated','accumulated','accumulated'),amount=c(unlist(nmolbt_aq_bf),unlist(nmolbt_aq_as),unlist(as.matrix(nmolbt_qq_bf)),unlist(as.matrix(nmolbt_qq_as))))
   
+  mypath <- file.path("Rdata","PlotOutputs","Mass_balance",paste("mass_balance", sub("_.*", "", current_compound), "_BE", ".jpeg", sep=''))
+  jpeg(file=mypath)
   print(ggplot(data,                         # Draw barplot with grouping & stacking col=c('aliceblue','green3')
                aes(x = biocommunity,
                    y = amount,
@@ -144,8 +148,8 @@ for (i in seq_along(filepaths_aq)) { #c(1:5))
           theme_bw(18) +
           theme(legend.position = 'right') +
           theme(legend.key.size = unit(1.5, 'cm')) +
-          labs(title = (paste(sub("_.*", "", current_compound), 'mass balance biotic experiment')),y = "amount [nmol]"))
-  
+          labs(title = (paste(sub("_.*", "", current_compound), 'mass balance \nbiotic experiment')),y = "amount [nmol]", x = 'microbial community'))
+  dev.off()
   print(paste(current_compound, 'biofilm',nmolbt_aq_bf,t(nmolbt_qq_bf),'activated sludge',nmolbt_aq_as,t(nmolbt_qq_as)))
   
 }
