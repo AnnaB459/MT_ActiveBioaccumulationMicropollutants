@@ -23,7 +23,8 @@ stda_only_IS <- read_csv(file="Rdata\\recoveries\\stda_recovery_only_IS.csv", sh
 all_ar <- c(ISTD_recovery$ar_mean,stda_recovery$ar_mean)
 boxplot(all_ar,
         main='Absolute recoveries',
-        ylab='absolute recovery [%]')
+        ylab='absolute recovery [%]',
+        cex.axis = 1.5, cex.lab = 1.5, cex.main = 1.7)
 
 stripchart(all_ar,
            vertical = TRUE, 
@@ -33,9 +34,9 @@ stripchart(all_ar,
 boxplot(ISTD_recovery$ar_mean, stda_recovery$ar_mean,
         main="Absolute recovery comparing methods",
         ylab='absolute recovery [%]',
-        #ylim=c(-40,70),
         names=c("ISTD method","standard addition method"),
-        col=c("orange","yellow")
+        col=c("orange","yellow"),
+        cex.axis = 1.5, cex.lab = 1.5, cex.main = 1.7
         )
 
 means <- c(mean(ISTD_recovery$ar_mean),mean(stda_recovery$ar_mean))
@@ -48,7 +49,6 @@ stripchart(ISTD_recovery$ar_mean,
 stripchart(stda_recovery$ar_mean,
            vertical = TRUE, 
            method = "jitter", add = TRUE, pch = 20, cex=0.8, at=2)
-#points(mean(stda_recovery$ar_mean), 1, col=3, pch=19,  at=2)
 points(x=1:2, means, col="red", pch=19)
 
 # make some statistical tests
@@ -68,7 +68,8 @@ boxplot(ISTD_recovery$rr_mean, stda_recovery$rr_mean,
         ylab='relative recovery [%]',
         #ylim=c(-40,150),
         names=c("ISTD method","standard addition method"),
-        col=c("orange","yellow")
+        col=c("orange","yellow"),
+        cex.axis = 1.5, cex.lab = 1.5, cex.main = 1.7
 )
 
 stripchart(ISTD_recovery$rr_mean,
@@ -97,7 +98,8 @@ boxplot(ISTD_recovery$rr_mean, stda_only_IS$rr_mean,
         ylab='relative recovery [%]',
         #ylim=c(-40,150),
         names=c("ISTD method","standard addition method"),
-        col=c("orange","yellow")
+        col=c("orange","yellow"),
+        cex.axis = 1.5, cex.lab = 1.5, cex.main = 1.7
 )
 
 stripchart(ISTD_recovery$rr_mean,
@@ -122,9 +124,8 @@ AS_BF_ar <- cbind(all_AS_ar,all_BF_ar)
 boxplot(AS_BF_ar,
         main="Absolute recovery comparing biomass type",
         ylab='absolute recovery [%]',
-        #ylim=c(-40,150),
-        #names=c("activated sludge","biofilm"),
-        col=c("tan4","green4")
+        col=c("tan4","green4"),
+        cex.axis = 1.5, cex.lab = 1.5, cex.main = 1.7
 )
 
 stripchart(all_AS_ar,
@@ -140,7 +141,7 @@ abline(100,0)
 # first check if difference is normally distributed
 all_ar_dif <- all_AS_ar[,1]-all_BF_ar[,1] # difference between both groups
 shapiro.test(all_ar_dif) #normality of difference -> no
-# cannot use paired t-test
+# cannot use paired t-test -> use Wilcox test
 if_dif_ar_as_bf <- wilcox.test(all_AS_ar[,1],all_BF_ar[,1],paired=TRUE,alternative="two.sided")
 
 
@@ -154,9 +155,8 @@ AS_BF_rr <- cbind(all_AS_rr,all_BF_rr)
 boxplot(AS_BF_rr,
         main="Relative recovery comparing biomass type",
         ylab='relative recovery [%]',
-        #ylim=c(-40,150),
-        #names=c("activated sludge","biofilm"),
-        col=c("tan4","green4")
+        col=c("tan4","green4"),
+        cex.axis = 1.5, cex.lab = 1.5, cex.main = 1.7
 )
 
 stripchart(all_AS_rr,
