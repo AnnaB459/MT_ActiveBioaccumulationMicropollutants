@@ -141,11 +141,9 @@ bar_plotting <- function(final_conc,current_compound) {
                accumulation=c('total (measured)','total (measured)','total (measured)','total (measured)','min active (calculated)','min active (calculated)','min active (calculated)','min active (calculated)'),
                value=c(final_conc[((2*i)-1):(2*i),3],final_conc[((2*i)-1):(2*i),5],active_accum))
     # now make the plots
-    # where to automatically save all plots "eawag","userdata","boeselan","My Documents","Rdata","PlotOutputs","Accumulation", 
+    # where to automatically save all plots
     mypath <- file.path("Rdata","PlotOutputs","Accumulation",paste("accumulation_", sub("_.*", "", current_compound), "_", biocommunity[i], ".jpeg", sep=''))
     jpeg(file=mypath)
-    #pdfpath <- file.path("Rdata","PlotOutputs","Accumulation","justapdf.pdf")
-    #pdf(file=pdfpath)
     print(ggplot(data, aes(x=reactor, y=value, pattern=accumulation)) +
       facet_grid(~timepoint) +
       geom_bar(stat = 'identity') +
