@@ -139,10 +139,7 @@ for (i in seq_along(filepaths_ISTD3)) {
   # get areas of ISTD in scheme 1 (needed for matrix factor calculation)
   AS_S1_ISTD_area <- (ISTD3_data %>% filter(str_detect(Filename, 'AS_S1')) %>% select('ISTD Response'))
   BF_S1_ISTD_area <- (ISTD3_data %>% filter(str_detect(Filename, 'BF_S1')) %>% select('ISTD Response'))
-  #AS_S1_ISTD_area <- mean(unlist(ISTD3_data %>% filter(str_detect(Filename, 'AS_S1')) %>% select('ISTD Response')))
-  #BF_S1_ISTD_area <- ISTD3_data %>% filter(str_detect(Filename, 'BF_S1')) %>% select('ISTD Response')[1:5,1]
-  
-  
+
   # get the calibration data and make a linear regression 
   ISTD3_cal <- ISTD3_data %>% filter(str_detect(Filename, 'Cal'))
   ISTD3_cal <- ISTD3_cal[ISTD3_cal$`Response Ratio` !=0,] # remove the entries where nothing is detected
@@ -176,33 +173,25 @@ for (i in seq_along(filepaths_ISTD3)) {
   AS_rel_recovery <- (AS_conc[,3]-AS_conc[,4])/mm/(theo_conc*IS_conv)
   AS_extr_efficiency <- (AS_conc[,2]-AS_conc[,4]/IS_conv)/(AS_conc[,1]-AS_conc[,4]/IS_conv)
   AS_matrix_factor <- AS_S1_ISTD_area/ISTD3_area
-  #AS_matrix_factor <- (unlist(AS_area[,1])-unlist(AS_area[,5]))/unlist(area_at_4nM)
   
   BF_abs_recovery <-(true_area_BF[,3]-true_area_BF[,4])/unlist(area_at_4nM4)#[3])
   BF_rel_recovery <- (BF_conc[,3]-BF_conc[,4])/mm/(theo_conc*IS_conv)
   BF_extr_efficiency <- (BF_conc[,2]-BF_conc[,4]/IS_conv)/(BF_conc[,1]-BF_conc[,4]/IS_conv)
   BF_matrix_factor <- BF_S1_ISTD_area/ISTD3_area
-  #BF_matrix_factor <- (unlist(BF_area[,1])-unlist(BF_area[,5]))/unlist(area_at_4nM)
   
   # store the output ----------------------------------------------------------------------------------------------------------------------------
   the_output <- tibble()
   for (k in 1:6) {
     the_output <- rbind(the_output, tibble('Compound name' = current_compound, 'AS_abs_recovery' = AS_abs_recovery[k], 'AS_rel_recovery' = AS_rel_recovery[k], 'AS_extr_efficiency' = AS_extr_efficiency[k], 'AS_matrix_factor' = AS_matrix_factor[k,1], 'BF_abs_recovery' = BF_abs_recovery[k], 'BF_rel_recovery' = BF_rel_recovery[k], 'BF_extr_efficiency' = BF_extr_efficiency[k], 'BF_matrix_factor' = BF_matrix_factor[k,1]))
-    #the_output <- rbind(the_output, tibble('Compound name' = current_compound, 'AS_abs_recovery' = AS_abs_recovery[k], 'AS_rel_recovery' = AS_rel_recovery[k], 'AS_extr_efficiency' = AS_extr_efficiency[k], 'AS_matrix_factor' = AS_matrix_factor[k], 'BF_abs_recovery' = BF_abs_recovery[k], 'BF_rel_recovery' = BF_rel_recovery[k], 'BF_extr_efficiency' = BF_extr_efficiency[k], 'BF_matrix_factor' = BF_matrix_factor[k]))
-  }
+   }
   the_output <- rbind(the_output, tibble('Compound name' = 'mean', 'AS_abs_recovery' = mean(unlist(AS_abs_recovery[c(1:4,6)])), 'AS_rel_recovery' = mean(unlist(AS_rel_recovery[c(1:4,6)])), 'AS_extr_efficiency' = mean(unlist(AS_extr_efficiency[c(1:4,6)])), 'AS_matrix_factor' = mean(unlist(AS_matrix_factor[c(1:4,6),1])), 'BF_abs_recovery' = mean(unlist(BF_abs_recovery)), 'BF_rel_recovery' = mean(unlist(BF_rel_recovery)), 'BF_extr_efficiency' = mean(unlist(BF_extr_efficiency)), 'BF_matrix_factor' = mean(unlist(BF_matrix_factor))))
   the_output <- rbind(the_output, tibble('Compound name' = 'standard deviation', 'AS_abs_recovery' = sd(unlist(AS_abs_recovery[c(1:4,6)])), 'AS_rel_recovery' = sd(unlist(AS_rel_recovery[c(1:4,6)])), 'AS_extr_efficiency' = sd(unlist(AS_extr_efficiency[c(1:4,6)])), 'AS_matrix_factor' = sd(unlist(AS_matrix_factor[c(1:4,6),1])), 'BF_abs_recovery' = sd(unlist(BF_abs_recovery)), 'BF_rel_recovery' = sd(unlist(BF_rel_recovery)), 'BF_extr_efficiency' = sd(unlist(BF_extr_efficiency)), 'BF_matrix_factor' = sd(unlist(BF_matrix_factor[c(1:4,6),1]))))
-  #the_output <- rbind(the_output, tibble('Compound name' = 'mean', 'AS_abs_recovery' = mean(unlist(AS_abs_recovery[c(1:4,6)])), 'AS_rel_recovery' = mean(unlist(AS_rel_recovery[c(1:4,6)])), 'AS_extr_efficiency' = mean(unlist(AS_extr_efficiency[c(1:4,6)])), 'AS_matrix_factor' = mean(unlist(AS_matrix_factor[c(1:4,6)])), 'BF_abs_recovery' = mean(unlist(BF_abs_recovery)), 'BF_rel_recovery' = mean(unlist(BF_rel_recovery)), 'BF_extr_efficiency' = mean(unlist(BF_extr_efficiency)), 'BF_matrix_factor' = mean(unlist(BF_matrix_factor))))
-  #the_output <- rbind(the_output, tibble('Compound name' = 'standard deviation', 'AS_abs_recovery' = sd(unlist(AS_abs_recovery[c(1:4,6)])), 'AS_rel_recovery' = sd(unlist(AS_rel_recovery[c(1:4,6)])), 'AS_extr_efficiency' = sd(unlist(AS_extr_efficiency[c(1:4,6)])), 'AS_matrix_factor' = sd(unlist(AS_matrix_factor[c(1:4,6)])), 'BF_abs_recovery' = sd(unlist(BF_abs_recovery)), 'BF_rel_recovery' = sd(unlist(BF_rel_recovery)), 'BF_extr_efficiency' = sd(unlist(BF_extr_efficiency)), 'BF_matrix_factor' = sd(unlist(BF_matrix_factor[c(1:4,6)]))))
   
   the_output[ nrow(the_output) + 1 , ] <- NA
   finaloutput <- rbind(finaloutput,the_output)
   
   cc_output <- paste(sub("_.*", "", current_compound), 'activated sludge,', format(round(mean(unlist(AS_abs_recovery[c(1:4,6)])),3),nsmall=3), '+/-', format(round(sd(unlist(AS_abs_recovery[c(1:4,6)])),3),nsmall=3), ',', format(round(mean(unlist(AS_rel_recovery[c(1:4,6)])),3),nsmall=3), '+/-', format(round(sd(unlist(AS_rel_recovery[c(1:4,6)])),3),nsmall=3), ',', format(round(mean(unlist(AS_extr_efficiency[1])),3),nsmall=3), ',', format(round(mean(unlist(AS_matrix_factor[c(1:4,6),1])),3),nsmall=3), '+/-', format(round(sd(unlist(AS_matrix_factor[c(1:4,6),1])),3),nsmall=3))
   cc_output <- rbind(cc_output, paste(sub("_.*", "", current_compound), 'biofilm,', format(round(mean(unlist(BF_abs_recovery[c(1:4,6)])),3),nsmall=3), '+/-', format(round(sd(unlist(BF_abs_recovery[c(1:4,6)])),3),nsmall=3), ',', format(round(mean(unlist(BF_rel_recovery[c(1:4,6)])),3),nsmall=3), '+/-', format(round(sd(unlist(BF_rel_recovery[c(1:4,6)])),3),nsmall=3), ',', format(round(mean(unlist(BF_extr_efficiency[1])),3),nsmall=3), ',', format(round(mean(unlist(BF_matrix_factor[c(1:4,6),1])),3),nsmall=3), '+/-', format(round(sd(unlist(BF_matrix_factor[c(1:4,6),1])),3),nsmall=3)))
-  #cc_output <- paste(sub("_.*", "", current_compound), 'activated sludge,', format(round(mean(unlist(AS_abs_recovery[c(1:4,6)])),3),nsmall=3), '+/-', format(round(sd(unlist(AS_abs_recovery[c(1:4,6)])),3),nsmall=3), ',', format(round(mean(unlist(AS_rel_recovery[c(1:4,6)])),3),nsmall=3), '+/-', format(round(sd(unlist(AS_rel_recovery[c(1:4,6)])),3),nsmall=3), ',', format(round(mean(unlist(AS_extr_efficiency[1])),3),nsmall=3), ',', format(round(mean(unlist(AS_matrix_factor[c(1:4,6)])),3),nsmall=3), '+/-', format(round(sd(unlist(AS_matrix_factor[c(1:4,6)])),3),nsmall=3))
-  #cc_output <- rbind(cc_output, paste(sub("_.*", "", current_compound), 'biofilm,', format(round(mean(unlist(BF_abs_recovery[c(1:4,6)])),3),nsmall=3), '+/-', format(round(sd(unlist(BF_abs_recovery[c(1:4,6)])),3),nsmall=3), ',', format(round(mean(unlist(BF_rel_recovery[c(1:4,6)])),3),nsmall=3), '+/-', format(round(sd(unlist(BF_rel_recovery[c(1:4,6)])),3),nsmall=3), ',', format(round(mean(unlist(BF_extr_efficiency[1])),3),nsmall=3), ',', format(round(mean(unlist(BF_matrix_factor[c(1:4,6)])),3),nsmall=3), '+/-', format(round(sd(unlist(BF_matrix_factor[c(1:4,6)])),3),nsmall=3)))
-  
   
   final_cc_output <- rbind(final_cc_output,cc_output)
 }
