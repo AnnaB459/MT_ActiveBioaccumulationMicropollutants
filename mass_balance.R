@@ -23,6 +23,7 @@ filepaths_aq <- fs::dir_ls("Rdata\\biotransformation_aq")
 V_init <- 0.5 # L, initial volume in batch
 tt_weights <- c(0.689,0.5185,0.488,0.448)
 mean_tt_weights <- c(0.60375,0.468)
+output <- list()
 # import quechers data
 quechers_data <- read_csv(file = "Rdata\\bt_exp_output.csv")
 
@@ -128,7 +129,9 @@ for (i in seq_along(filepaths_aq)) { #c(1:5))
     theme(legend.key.size = unit(1.5, 'cm')) +
     labs(title = (paste(sub("_.*", "", current_compound), 'mass balance \nsorption control')),y = "amount [nmol]", x = 'microbial community'))
   dev.off()
-  print(paste(current_compound, 'biofilm',nmolsc_aq_bf,t(nmolsc_qq_bf),'activated sludge',nmolsc_aq_as,t(nmolsc_qq_as)))
+  #print(paste(current_compound, 'biofilm',nmolsc_aq_bf,t(nmolsc_qq_bf),'activated sludge',nmolsc_aq_as,t(nmolsc_qq_as)))
+  #output <- rbind(output, paste(current_compound, 'SC biofilm',nmolsc_aq_bf,t(nmolsc_qq_bf),'SC activated sludge',nmolsc_aq_as,t(nmolsc_qq_as)))
+  output <- rbind(output, c(paste(sub("_.*", "", current_compound)), 'SC biofilm aq',nmolsc_aq_bf), c(paste(sub("_.*", "", current_compound)), 'SC biofilm qq',nmolsc_qq_bf),c(paste(sub("_.*", "", current_compound)), 'SC biofilm total',nmol_total_bf),c(paste(sub("_.*", "", current_compound)), 'SC activated sludge aq',nmolsc_aq_as), c(paste(sub("_.*", "", current_compound)), 'SC activated sludge qq',nmolsc_qq_as),c(paste(sub("_.*", "", current_compound)), 'SC activated sludge total',nmol_total_as))
   
   
   # for biotic experiment
@@ -150,6 +153,9 @@ for (i in seq_along(filepaths_aq)) { #c(1:5))
           theme(legend.key.size = unit(1.5, 'cm')) +
           labs(title = (paste(sub("_.*", "", current_compound), 'mass balance \nbiotic experiment')),y = "amount [nmol]", x = 'microbial community'))
   dev.off()
-  print(paste(current_compound, 'biofilm',nmolbt_aq_bf,t(nmolbt_qq_bf),'activated sludge',nmolbt_aq_as,t(nmolbt_qq_as)))
+  #print(paste(current_compound, 'biofilm',nmolbt_aq_bf,t(nmolbt_qq_bf),'activated sludge',nmolbt_aq_as,t(nmolbt_qq_as)))
+  output <- rbind(output, c(paste(sub("_.*", "", current_compound)), 'BE biofilm aq',nmolbt_aq_bf), c(paste(sub("_.*", "", current_compound)), 'BE biofilm qq',nmolbt_qq_bf),c(paste(sub("_.*", "", current_compound)), 'BE biofilm total',nmol_total_bf_bt), c(paste(sub("_.*", "", current_compound)), 'BE activated sludge aq',nmolbt_aq_as), c(paste(sub("_.*", "", current_compound)), 'BE activated sludge qq',nmolbt_qq_as),c(paste(sub("_.*", "", current_compound)), 'BE activated sludge total',nmol_total_as_bt))
   
 }
+
+write.csv(output,"Rdata\\mass_balance.csv", row.names = FALSE)
